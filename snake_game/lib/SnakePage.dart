@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SnakeGame extends StatefulWidget {
   SnakeGame({Key key}) : super(key: key);
@@ -10,6 +10,12 @@ class SnakeGame extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
+
+Color snakeColor = Colors.white;
+Color boardColor = Colors.black;
+Color foodColor = Colors.yellow;
+int score = 0;
+int highScore = 0;
 
 class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   bool _flag = true;
@@ -32,11 +38,13 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    score = 0;
     nobox = 600;
     widthbox = 20;
     duration = Duration(milliseconds: 300);
     direction = 'down';
     foodPos();
+    getPref();
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
@@ -45,11 +53,12 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
     _myAnimation = CurvedAnimation(curve: Curves.linear, parent: _controller);
   }
 
+  getPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    highScore = prefs.getInt('highscore');
+  }
+
   void startGame() {
-    // if (width > 400) {
-    //   widthbox = 40;
-    // }
-    // duration = Duration(milliseconds: 300);
     Timer.periodic(duration, (Timer timer) {
       updateSnake();
     });
@@ -60,7 +69,6 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   void foodPos() {
     food = _random.nextInt(nobox);
     while (snake.contains(food)) food = _random.nextInt(nobox);
-    print(food);
   }
 
   bool endGame() {
@@ -96,36 +104,33 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
 
         if (snake.last != food)
           snake.removeAt(0);
-        else
+        else {
+          score++;
           foodPos();
+        }
 
         if (endGame()) {
           print('The end');
           setState(() {
             _flag = !_flag;
           });
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  actions: [
-                    new FlatButton(
-                        onPressed: () {
-                          // exit(0);
-                          // setState(() {
-                          //   initState();
-                          // });
-                          // Navigator.of(context)
-                          //     .maybePop(Navigator.of(context).canPop());
-                          Navigator.of(context).popAndPushNamed('/');
-                        },
-                        child: Text('Exit'))
-                  ],
-                  backgroundColor: Colors.black,
-                  contentPadding: EdgeInsets.all(20),
-                  title: Text('Score: ${snake.length}'),
-                );
-              });
+          Navigator.pushReplacementNamed(context, '/end');
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       return AlertDialog(
+          //         actions: [
+          //           new FlatButton(
+          //               onPressed: () {
+          //                 Navigator.of(context).popAndPushNamed('/');
+          //               },
+          //               child: Text('Return to Home Screen'))
+          //         ],
+          //         backgroundColor: boardColor,
+          //         contentPadding: EdgeInsets.all(20),
+          //         title: Text('Score: $score'),
+          //       );
+          //     });
         }
       });
   }
@@ -137,7 +142,7 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
       appBar: AppBar(
         title: Text(
           'Snake Game',
-          style: GoogleFonts.orbitron(),
+          style: TextStyle(),
         ),
         centerTitle: true,
         backgroundColor: Colors.blueGrey,
@@ -153,7 +158,7 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
         elevation: 20,
         label: Text(
           _flag ? 'Start' : 'Pause',
-          style: GoogleFonts.orbitron(),
+          style: TextStyle(),
         ),
         onPressed: () {
           // print('flag changed');
@@ -197,24 +202,27 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
           child: Container(
             width: width,
             child: GridView.builder(
-              itemCount: nobox,
+              itemCount: nobox + widthbox,
               physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: widthbox),
               itemBuilder: (BuildContext context, int index) {
                 return Center(
                   child: Container(
-                    // padding: EdgeInsets.all(2),
+                    color: boardColor,
+                    padding: snake.contains(index)
+                        ? EdgeInsets.all(1)
+                        : EdgeInsets.all(0),
                     child: ClipRRect(
-                      borderRadius: index == food ||
-                              // index == snake[0] ||
-                              index == snake.last
-                          ? BorderRadius.circular(5)
-                          : BorderRadius.circular(1),
+                      borderRadius: index == food || index == snake.last
+                          ? BorderRadius.circular(8)
+                          : snake.contains(index)
+                              ? BorderRadius.circular(3)
+                              : BorderRadius.circular(1),
                       child: Container(
                         color: snake.contains(index)
-                            ? Colors.white
-                            : index == food ? Colors.red : Colors.black54,
+                            ? snakeColor
+                            : index == food ? foodColor : boardColor,
                       ),
                     ),
                   ),
