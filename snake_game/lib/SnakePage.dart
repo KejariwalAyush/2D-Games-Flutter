@@ -17,47 +17,35 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   Animation<double> _myAnimation;
   AnimationController _controller;
   List<int> snake = [
-    0,
-    20,
-    40,
-    60,
-    80,
-    100,
-    120,
-    140,
-    160,
-    180,
-    200,
-    220,
-    240,
-    260,
-    280,
-    300,
-    320,
-    340,
-    360
+    21,
+    41,
+    61,
+    81,
+    101,
   ];
+  int nobox;
   Duration duration = Duration(milliseconds: 300);
+  var widthbox;
   String direction = 'down';
   @override
   void initState() {
     super.initState();
+    nobox = 600;
+    widthbox = 20;
     duration = Duration(milliseconds: 300);
-    snake = [1, 21, 41, 61, 81];
+    // snake = [1, 21, 41, 61, 81];
     direction = 'down';
     foodPos();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 300),
     );
 
     _myAnimation = CurvedAnimation(curve: Curves.linear, parent: _controller);
   }
 
   void startGame() {
-    // if (snake == null)
-    // snake = [1, 21, 41, 61, 81];
-    // duration = Duration(milliseconds: 200);
+    // duration = Duration(milliseconds: 300);
     Timer.periodic(duration, (Timer timer) {
       updateSnake();
     });
@@ -66,13 +54,14 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   int food;
   Random _random = Random();
   void foodPos() {
-    food = _random.nextInt(640);
+    food = _random.nextInt(nobox);
+    while (snake.contains(food)) food = _random.nextInt(nobox);
     print(food);
   }
 
   bool endGame() {
     for (int i = 0; i < snake.length - 1; i++)
-      if (snake.last == snake[i] || snake.last == 0) return true;
+      if (snake.last == snake[i]) return true;
     return false;
   }
 
@@ -80,26 +69,31 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
     if (!_flag)
       setState(() {
         if (direction == 'down') {
-          if (snake.last > 640)
-            snake.add(snake.last + 20 - 660);
+          if (snake.last > nobox)
+            snake.add(snake.last + widthbox - (nobox + widthbox));
           else
-            snake.add(snake.last + 20);
+            snake.add(snake.last + widthbox);
         } else if (direction == 'up') {
-          if (snake.last < 20)
-            snake.add(snake.last - 20 + 660);
+          if (snake.last < widthbox)
+            snake.add(snake.last - widthbox + (nobox + widthbox));
           else
-            snake.add(snake.last - 20);
+            snake.add(snake.last - widthbox);
         } else if (direction == 'right') {
-          if ((snake.last + 1) % 20 == 0)
-            snake.add(snake.last + 1 - 20);
+          if ((snake.last + 1) % widthbox == 0)
+            snake.add(snake.last + 1 - widthbox);
           else
             snake.add(snake.last + 1);
         } else if (direction == 'left') {
-          if ((snake.last) % 20 == 0)
-            snake.add(snake.last - 1 + 20);
+          if ((snake.last) % widthbox == 0)
+            snake.add(snake.last - 1 + widthbox);
           else
             snake.add(snake.last - 1);
         }
+
+        if (snake.last != food)
+          snake.removeAt(0);
+        else
+          foodPos();
 
         if (endGame()) {
           print('The end');
@@ -126,10 +120,7 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
                   title: Text('Score: ${snake.length}'),
                 );
               });
-        } else if (snake.last != food)
-          snake.removeAt(0);
-        else
-          foodPos();
+        }
       });
   }
 
@@ -189,65 +180,28 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
                 ? 350
                 : MediaQuery.of(context).size.width,
             child: GridView.builder(
-              itemCount: 640,
+              itemCount: nobox,
               physics: NeverScrollableScrollPhysics(),
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 20),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: widthbox),
               itemBuilder: (BuildContext context, int index) {
-                if (!_flag) {
-                  return Center(
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: Container(
-                          color: snake.contains(index)
-                              ? Colors.white
-                              : index == food ? Colors.red : Colors.black54,
-                        ),
+                return Center(
+                  child: Container(
+                    // padding: EdgeInsets.all(2),
+                    child: ClipRRect(
+                      borderRadius: index == food ||
+                              // index == snake[0] ||
+                              index == snake.last
+                          ? BorderRadius.circular(5)
+                          : BorderRadius.circular(1),
+                      child: Container(
+                        color: snake.contains(index)
+                            ? Colors.white
+                            : index == food ? Colors.red : Colors.black54,
                       ),
                     ),
-                  );
-                } else {
-                  if (!snake.contains(index)) {
-                    return Center(
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Container(
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-
-                  if (snake.contains(index))
-                    return Center(
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Container(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    );
-                  if (food == index)
-                    return Center(
-                      child: Container(
-                        padding: EdgeInsets.all(2),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Container(
-                            color: Colors.redAccent,
-                          ),
-                        ),
-                      ),
-                    );
-                }
+                  ),
+                );
               },
             ),
           ),
