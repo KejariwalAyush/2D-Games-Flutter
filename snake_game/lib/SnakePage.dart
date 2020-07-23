@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SnakeGame extends StatefulWidget {
   SnakeGame({Key key}) : super(key: key);
@@ -27,13 +27,14 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   Duration duration = Duration(milliseconds: 300);
   var widthbox;
   String direction = 'down';
+  var width;
+
   @override
   void initState() {
     super.initState();
     nobox = 600;
     widthbox = 20;
     duration = Duration(milliseconds: 300);
-    // snake = [1, 21, 41, 61, 81];
     direction = 'down';
     foodPos();
     _controller = AnimationController(
@@ -45,6 +46,9 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   }
 
   void startGame() {
+    // if (width > 400) {
+    //   widthbox = 40;
+    // }
     // duration = Duration(milliseconds: 300);
     Timer.periodic(duration, (Timer timer) {
       updateSnake();
@@ -107,15 +111,17 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
                   actions: [
                     new FlatButton(
                         onPressed: () {
-                          exit(0);
+                          // exit(0);
                           // setState(() {
                           //   initState();
                           // });
-                          // Navigator.of(context).pop();
+                          // Navigator.of(context)
+                          //     .maybePop(Navigator.of(context).canPop());
+                          Navigator.of(context).popAndPushNamed('/');
                         },
                         child: Text('Exit'))
                   ],
-                  backgroundColor: Colors.black54,
+                  backgroundColor: Colors.black,
                   contentPadding: EdgeInsets.all(20),
                   title: Text('Score: ${snake.length}'),
                 );
@@ -126,15 +132,29 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Snake Game'),
+        title: Text(
+          'Snake Game',
+          style: GoogleFonts.orbitron(),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.blueGrey,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+              '/', (route) => Navigator.canPop(context)),
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        autofocus: true,
-        backgroundColor: Colors.white54,
+        // autofocus: true,
+        backgroundColor: Colors.blueGrey,
         elevation: 20,
-        label: Text(_flag ? 'Start' : 'Pause'),
+        label: Text(
+          _flag ? 'Start' : 'Pause',
+          style: GoogleFonts.orbitron(),
+        ),
         onPressed: () {
           // print('flag changed');
           setState(() {
@@ -151,8 +171,7 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
         icon: AnimatedIcon(
             icon: AnimatedIcons.play_pause, progress: _myAnimation),
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
         child: GestureDetector(
           onVerticalDragUpdate: (details) {
@@ -176,9 +195,7 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
             // print(direction);
           },
           child: Container(
-            width: MediaQuery.of(context).size.width > 400
-                ? 350
-                : MediaQuery.of(context).size.width,
+            width: width,
             child: GridView.builder(
               itemCount: nobox,
               physics: NeverScrollableScrollPhysics(),
