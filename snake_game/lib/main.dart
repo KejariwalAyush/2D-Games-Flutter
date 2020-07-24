@@ -186,8 +186,9 @@ class _EndPageState extends State<EndPage> {
                       fontStyle: FontStyle.italic),
                 ),
                 Text(
-                  'Game Over!',
+                  'Game Over! \nin $elapsedTime min',
                   overflow: TextOverflow.visible,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.black54,
                       fontSize: 40,

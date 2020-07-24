@@ -16,6 +16,7 @@ Color boardColor = Colors.black;
 Color foodColor = Colors.yellow;
 int score = 0;
 int highScore = 0;
+String elapsedTime = '';
 
 class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   bool _flag = true;
@@ -34,6 +35,17 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   var widthbox;
   String direction = 'down';
   var width;
+
+  Stopwatch watch = new Stopwatch();
+  Timer timer;
+
+  updateTime(Timer timer) {
+    if (watch.isRunning) {
+      setState(() {
+        elapsedTime = transformMilliSeconds(watch.elapsedMilliseconds);
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -55,7 +67,8 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
 
   getPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    highScore = prefs.getInt('highscore');
+    highScore =
+        prefs.getInt('highscore') == null ? 0 : prefs.getInt('highscore');
   }
 
   void startGame() {
@@ -152,12 +165,17 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
               '/', (route) => Navigator.canPop(context)),
         ),
       ),
+      bottomSheet: Text(
+        '*If you pause the game, Speed of Snake will increase',
+        overflow: TextOverflow.visible,
+        // textAlign: TextAlign.end,
+      ),
       floatingActionButton: FloatingActionButton.extended(
         // autofocus: true,
         backgroundColor: Colors.blueGrey,
         elevation: 20,
         label: Text(
-          _flag ? 'Start' : 'Pause',
+          _flag ? 'Start' : '$elapsedTime',
           style: TextStyle(),
         ),
         onPressed: () {
@@ -165,8 +183,10 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
           setState(() {
             if (_flag) {
               _controller.forward();
+              startWatch();
             } else {
               _controller.reverse();
+              stopWatch();
             }
             _flag = !_flag;
             startGame();
@@ -233,5 +253,39 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  startWatch() {
+    watch.start();
+    timer = new Timer.periodic(new Duration(milliseconds: 100), updateTime);
+  }
+
+  stopWatch() {
+    watch.stop();
+    setTime();
+  }
+
+  resetWatch() {
+    watch.reset();
+    setTime();
+  }
+
+  setTime() {
+    var timeSoFar = watch.elapsedMilliseconds;
+    setState(() {
+      elapsedTime = transformMilliSeconds(timeSoFar);
+    });
+  }
+
+  transformMilliSeconds(int milliseconds) {
+    //Thanks to Andrew
+    int hundreds = (milliseconds / 10).truncate();
+    int seconds = (hundreds / 100).truncate();
+    int minutes = (seconds / 60).truncate();
+
+    String minutesStr = (minutes % 60).toString().padLeft(2, '0');
+    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+
+    return "$minutesStr:$secondsStr";
   }
 }
