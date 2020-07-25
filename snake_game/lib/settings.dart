@@ -30,6 +30,18 @@ class _SettingsState extends State<Settings> {
         child: Column(
           children: [
             ListTile(
+              title: Text('Borders'),
+              subtitle: Text('On Enabling Borders, Snake will not bite itself'),
+              trailing: Switch.adaptive(
+                value: border,
+                onChanged: (value) {
+                  setState(() {
+                    border = !border;
+                  });
+                },
+              ),
+            ),
+            ListTile(
               title: Text('Change Snake Color'),
               trailing: ClipRRect(
                 borderRadius: BorderRadius.circular(20),

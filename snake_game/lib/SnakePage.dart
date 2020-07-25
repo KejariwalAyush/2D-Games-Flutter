@@ -18,6 +18,8 @@ int score = 0;
 int highScore = 0;
 String elapsedTime = '';
 
+bool border = false;
+
 class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   bool _flag = true;
 
@@ -50,13 +52,16 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    // snakeColor = Colors.white;
+    // boardColor = Colors.black;
+    // foodColor = Colors.yellow;
     score = 0;
     nobox = 600;
     widthbox = 20;
     duration = Duration(milliseconds: 300);
     direction = 'down';
     foodPos();
-    getPref();
+    // getPref();
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
@@ -65,13 +70,8 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
     _myAnimation = CurvedAnimation(curve: Curves.linear, parent: _controller);
   }
 
-  getPref() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    highScore =
-        prefs.getInt('highscore') == null ? 0 : prefs.getInt('highscore');
-  }
-
   void startGame() {
+    elapsedTime = "";
     Timer.periodic(duration, (Timer timer) {
       updateSnake();
     });
@@ -82,12 +82,31 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   void foodPos() {
     food = _random.nextInt(nobox);
     while (snake.contains(food)) food = _random.nextInt(nobox);
+    while (isBorder(food)) food = _random.nextInt(nobox);
+  }
+
+  bool isBorder(int x) {
+    for (int i = 0; i < widthbox; i++) if (x == i) return true;
+    for (int i = nobox; i < nobox + widthbox; i++) if (x == i) return true;
+    for (int i = 0; i < nobox; i = i + 20) if (x == i) return true;
+    for (int i = widthbox - 1; i < widthbox + nobox; i = i + 20)
+      if (x == i) return true;
+
+    return false;
   }
 
   bool endGame() {
-    for (int i = 0; i < snake.length - 1; i++)
-      if (snake.last == snake[i]) return true;
-    return false;
+    if (border) {
+      if (isBorder(snake.last))
+        return true;
+      else
+        return false;
+    } else {
+      for (int i = 0; i < snake.length - 1; i++)
+        if (snake.last == snake[i]) return true;
+
+      return false;
+    }
   }
 
   void updateSnake() {
@@ -127,6 +146,8 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
           setState(() {
             _flag = !_flag;
           });
+          // dispose();
+          resetWatch();
           Navigator.pushReplacementNamed(context, '/end');
           // showDialog(
           //     context: context,
@@ -242,7 +263,13 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
                       child: Container(
                         color: snake.contains(index)
                             ? snakeColor
-                            : index == food ? foodColor : boardColor,
+                            : index == food
+                                ? foodColor
+                                : border
+                                    ? isBorder(index)
+                                        ? Colors.blueAccent
+                                        : boardColor
+                                    : boardColor,
                       ),
                     ),
                   ),

@@ -31,7 +31,37 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  @override
+  initState() {
+    super.initState();
+    getPref();
+  }
+
+  getPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    highScore =
+        prefs.getInt('highscore') == null ? 0 : prefs.getInt('highscore');
+    border = prefs.getBool('border') == null ? false : prefs.getBool('border');
+    // int snakeColorCode = prefs.getInt('snakeColor') == null
+    //     ? prefs.getInt('snakeColor')
+    //     : snakeColor.hashCode;
+    // int foodColorCode = prefs.getInt('foodColor') == null
+    //     ? prefs.getInt('foodColor')
+    //     : foodColor.hashCode;
+    // int boardColorCode = prefs.getInt('boardColor') == null
+    //     ? prefs.getInt('boardColor')
+    //     : boardColor.hashCode;
+    // snakeColor = Color(snakeColorCode);
+    // foodColor = Color(foodColorCode);
+    // boardColor = Color(boardColorCode);
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<bool> _onWillPop() async {
@@ -130,6 +160,10 @@ class _EndPageState extends State<EndPage> {
   setPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('highscore', score);
+    prefs.setBool('border', border);
+    // prefs.setInt('snakeColor', snakeColor.hashCode);
+    // prefs.setInt('foodColor', foodColor.hashCode);
+    // prefs.setInt('boardColor', boardColor.hashCode);
   }
 
   @override
