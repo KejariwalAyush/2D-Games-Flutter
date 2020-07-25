@@ -154,22 +154,6 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
             // print(score);
           });
           Navigator.pushReplacementNamed(context, '/end');
-          // showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) {
-          //       return AlertDialog(
-          //         actions: [
-          //           new FlatButton(
-          //               onPressed: () {
-          //                 Navigator.of(context).popAndPushNamed('/');
-          //               },
-          //               child: Text('Return to Home Screen'))
-          //         ],
-          //         backgroundColor: boardColor,
-          //         contentPadding: EdgeInsets.all(20),
-          //         title: Text('Score: $score'),
-          //       );
-          //     });
         }
       });
   }
@@ -184,21 +168,24 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
           style: TextStyle(),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.indigoAccent,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
               '/', (route) => Navigator.canPop(context)),
         ),
       ),
-      bottomSheet: Text(
-        '*If you pause the game, Speed of Snake will increase',
-        overflow: TextOverflow.visible,
-        // textAlign: TextAlign.end,
+      bottomSheet: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5.0),
+        child: Text(
+          '*If you pause the game,\nSpeed of Snake will increase',
+          overflow: TextOverflow.visible,
+          textAlign: TextAlign.center,
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         // autofocus: true,
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.indigoAccent,
         elevation: 20,
         label: Text(
           _flag ? 'Start' : '$elapsedTime',

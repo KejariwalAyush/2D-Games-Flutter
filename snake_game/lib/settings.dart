@@ -19,7 +19,7 @@ class _SettingsState extends State<Settings> {
           style: TextStyle(),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.indigoAccent,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),

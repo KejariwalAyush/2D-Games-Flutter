@@ -68,10 +68,14 @@ class _MainScreenState extends State<MainScreen> {
       onWillPop: _onWillPop,
       child: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
-          label: Text('Settings'),
+          label: Text(
+            'Settings',
+          ),
           onPressed: () => Navigator.pushNamed(context, '/settings'),
-          icon: Icon(Icons.settings),
-          backgroundColor: Colors.blueGrey,
+          icon: Icon(
+            Icons.settings,
+          ),
+          backgroundColor: Colors.indigoAccent,
           elevation: 0,
         ),
         floatingActionButtonLocation:
@@ -79,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
         body: Center(
           child: Container(
             padding: EdgeInsets.all(25),
-            color: Colors.blueGrey,
+            color: Colors.indigoAccent,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -89,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
                   overflow: TextOverflow.visible,
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 65,
+                      fontSize: 60,
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic),
                 ),
@@ -104,10 +108,10 @@ class _MainScreenState extends State<MainScreen> {
                           'Play Game',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 30,
+                            fontSize: 20,
                           ),
                         ),
-                        color: Colors.blueGrey[700],
+                        color: Colors.indigoAccent[700],
                         padding: EdgeInsets.all(30),
                         onPressed: () =>
                             Navigator.of(context).pushNamed('/game'),
@@ -178,7 +182,7 @@ class _EndPageState extends State<EndPage> {
           label: Text('Settings'),
           onPressed: () => Navigator.pushNamed(context, '/settings'),
           icon: Icon(Icons.settings),
-          backgroundColor: Colors.blueGrey,
+          backgroundColor: Colors.indigoAccent,
           elevation: 0,
         ),
         floatingActionButtonLocation:
@@ -186,7 +190,7 @@ class _EndPageState extends State<EndPage> {
         body: Center(
           child: Container(
             padding: EdgeInsets.all(25),
-            color: Colors.blueGrey,
+            color: Colors.indigoAccent,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -196,7 +200,7 @@ class _EndPageState extends State<EndPage> {
                   overflow: TextOverflow.visible,
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 65,
+                      fontSize: 60,
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic),
                 ),
@@ -206,7 +210,7 @@ class _EndPageState extends State<EndPage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.black54,
-                      fontSize: 40,
+                      fontSize: 35,
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic),
                 ),
@@ -217,7 +221,7 @@ class _EndPageState extends State<EndPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 45,
+                            fontSize: 40,
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic),
                       )
@@ -237,7 +241,7 @@ class _EndPageState extends State<EndPage> {
                           text: '${highScore > score ? highScore : score}',
                           style: TextStyle(
                             color: foodColor,
-                            fontSize: 35,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         )
@@ -250,7 +254,7 @@ class _EndPageState extends State<EndPage> {
                       text: 'Your Score: ',
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 40,
+                          fontSize: 35,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic),
                       children: [
@@ -258,7 +262,7 @@ class _EndPageState extends State<EndPage> {
                           text: '$score',
                           style: TextStyle(
                             color: foodColor,
-                            fontSize: 40,
+                            fontSize: 35,
                             fontWeight: FontWeight.bold,
                           ),
                         )
@@ -280,8 +284,8 @@ class _EndPageState extends State<EndPage> {
                             fontSize: 30,
                           ),
                         ),
-                        color: Colors.blueGrey[700],
-                        padding: EdgeInsets.all(30),
+                        color: Colors.indigoAccent[700],
+                        padding: EdgeInsets.all(20),
                         onPressed: () {
                           elapsedTime = '';
                           Navigator.of(context).pushNamed('/game');
