@@ -41,104 +41,45 @@ class _SettingsState extends State<Settings> {
                 },
               ),
             ),
-            ListTile(
-              title: Text('Change Snake Color'),
-              trailing: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  height: 20,
-                  width: 20,
-                  color: snakeColor,
-                ),
-              ),
-              onTap: () => showDialog(
-                context: context,
-                child: AlertDialog(
-                  title: const Text('Pick a color for Snake!'),
-                  content: SingleChildScrollView(
-                    child: MaterialPicker(
-                      pickerColor: snakeColor,
-                      onColorChanged: changeColor,
-                      // showLabel: true, // only on portrait mode
-                    ),
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: const Text('Done'),
-                      onPressed: () {
-                        setState(() => snakeColor = pickerColor);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+            colorChangeTile(
+              title: 'Change Snake Color',
+              alertTitle: 'Select Snake Color',
+              alertButtonText: 'Select',
+              selectedColor: snakeColor,
+              onPressed: () {
+                setState(() => snakeColor = pickerColor);
+                Navigator.of(context).pop();
+              },
             ),
-            ListTile(
-              title: Text('Change Food Color'),
-              trailing: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  height: 20,
-                  width: 20,
-                  color: foodColor,
-                ),
-              ),
-              onTap: () => showDialog(
-                context: context,
-                child: AlertDialog(
-                  title: const Text('Pick a color for Food!'),
-                  content: SingleChildScrollView(
-                    child: MaterialPicker(
-                      pickerColor: foodColor,
-                      onColorChanged: changeColor,
-                      // showLabel: true, // only on portrait mode
-                    ),
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: const Text('Done'),
-                      onPressed: () {
-                        setState(() => foodColor = pickerColor);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+            colorChangeTile(
+              title: 'Change Food Color',
+              alertTitle: 'Select Food Color',
+              alertButtonText: 'Select',
+              selectedColor: foodColor,
+              onPressed: () {
+                setState(() => foodColor = pickerColor);
+                Navigator.of(context).pop();
+              },
             ),
-            ListTile(
-              title: Text('Change Board Color'),
-              trailing: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  height: 20,
-                  width: 20,
-                  color: boardColor,
-                ),
-              ),
-              onTap: () => showDialog(
-                context: context,
-                child: AlertDialog(
-                  title: const Text('Pick a color for board!'),
-                  content: SingleChildScrollView(
-                    child: MaterialPicker(
-                      pickerColor: boardColor,
-                      onColorChanged: changeColor,
-                      // showLabel: true, // only on portrait mode
-                    ),
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: const Text('Done'),
-                      onPressed: () {
-                        setState(() => boardColor = pickerColor);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+            colorChangeTile(
+              title: 'Change Border Color',
+              alertTitle: 'Select Border Color',
+              alertButtonText: 'Select',
+              selectedColor: borderColor,
+              onPressed: () {
+                setState(() => borderColor = pickerColor);
+                Navigator.of(context).pop();
+              },
+            ),
+            colorChangeTile(
+              title: 'Change Board Color',
+              alertTitle: 'Select Board Color',
+              alertButtonText: 'Select',
+              selectedColor: boardColor,
+              onPressed: () {
+                setState(() => boardColor = pickerColor);
+                Navigator.of(context).pop();
+              },
             ),
           ],
         ),
@@ -151,44 +92,87 @@ class _SettingsState extends State<Settings> {
     setState(() => pickerColor = color);
   }
 
-  // void PickColor(Color currentColor) {
-  //   showDialog(
-  //     context: context,
-  //     child: AlertDialog(
-  //       title: const Text('Pick a color!'),
-  //       content: SingleChildScrollView(
-  //         // child: ColorPicker(
-  //         //   pickerColor: pickerColor,
-  //         //   onColorChanged: changeColor,
-  //         //   showLabel: true,
-  //         //   pickerAreaHeightPercent: 0.8,
-  //         // ),
-  //         // Use Material color picker:
-
-  //         child: MaterialPicker(
-  //           pickerColor: pickerColor,
-  //           onColorChanged: changeColor,
-  //           // showLabel: true, // only on portrait mode
-  //         ),
-  //         //
-  //         // Use Block color picker:
-  //         //
-  //         // child: BlockPicker(
-  //         //   pickerColor: currentColor,
-  //         //   onColorChanged: changeColor,
-  //         // ),
-  //       ),
-  //       actions: <Widget>[
-  //         FlatButton(
-  //           child: const Text('Got it'),
-  //           onPressed: () {
-  //             setState(() => snakeColor = pickerColor);
-  //             Navigator.of(context).pop();
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  //   // return currentColor;
-  // }
+  Widget colorChangeTile({
+    String title,
+    String alertTitle,
+    Color selectedColor,
+    String alertButtonText,
+    @required VoidCallback onPressed,
+  }) {
+    return ListTile(
+      title: Text(title),
+      trailing: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          height: 20,
+          width: 20,
+          color: selectedColor,
+        ),
+      ),
+      onTap: () => showDialog(
+        context: context,
+        child: AlertDialog(
+          title: Text(alertTitle),
+          content: SingleChildScrollView(
+            child: MaterialPicker(
+              pickerColor: selectedColor,
+              onColorChanged: changeColor,
+              // showLabel: true, // only on portrait mode
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(alertButtonText),
+              onPressed: onPressed,
+              // () {
+              //   setState(() => boardColor = pickerColor);
+              //   Navigator.of(context).pop();
+              // },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
+
+// void PickColor(Color currentColor) {
+//   showDialog(
+//     context: context,
+//     child: AlertDialog(
+//       title: const Text('Pick a color!'),
+//       content: SingleChildScrollView(
+//         // child: ColorPicker(
+//         //   pickerColor: pickerColor,
+//         //   onColorChanged: changeColor,
+//         //   showLabel: true,
+//         //   pickerAreaHeightPercent: 0.8,
+//         // ),
+//         // Use Material color picker:
+
+//         child: MaterialPicker(
+//           pickerColor: pickerColor,
+//           onColorChanged: changeColor,
+//           // showLabel: true, // only on portrait mode
+//         ),
+//         //
+//         // Use Block color picker:
+//         //
+//         // child: BlockPicker(
+//         //   pickerColor: currentColor,
+//         //   onColorChanged: changeColor,
+//         // ),
+//       ),
+//       actions: <Widget>[
+//         FlatButton(
+//           child: const Text('Got it'),
+//           onPressed: () {
+//             setState(() => snakeColor = pickerColor);
+//             Navigator.of(context).pop();
+//           },
+//         ),
+//       ],
+//     ),
+//   );
+//   // return currentColor;
+// }

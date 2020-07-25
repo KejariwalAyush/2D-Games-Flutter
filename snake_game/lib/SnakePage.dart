@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SnakeGame extends StatefulWidget {
   SnakeGame({Key key}) : super(key: key);
@@ -14,6 +13,7 @@ class SnakeGame extends StatefulWidget {
 Color snakeColor = Colors.white;
 Color boardColor = Colors.black;
 Color foodColor = Colors.yellow;
+Color borderColor = Colors.blue;
 double score = 0;
 int highScore = 0;
 String elapsedTime = '';
@@ -271,9 +271,7 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
                             : index == food
                                 ? foodColor
                                 : border
-                                    ? isBorder(index)
-                                        ? Colors.blueAccent
-                                        : boardColor
+                                    ? isBorder(index) ? borderColor : boardColor
                                     : boardColor,
                       ),
                     ),
