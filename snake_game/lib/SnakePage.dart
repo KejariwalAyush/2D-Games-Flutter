@@ -14,7 +14,7 @@ class SnakeGame extends StatefulWidget {
 Color snakeColor = Colors.white;
 Color boardColor = Colors.black;
 Color foodColor = Colors.yellow;
-int score = 0;
+double score = 0;
 int highScore = 0;
 String elapsedTime = '';
 
@@ -61,6 +61,7 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
     duration = Duration(milliseconds: 300);
     direction = 'down';
     foodPos();
+    resetWatch();
     // getPref();
     _controller = AnimationController(
       vsync: this,
@@ -71,7 +72,7 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
   }
 
   void startGame() {
-    elapsedTime = "";
+    // elapsedTime = "";
     Timer.periodic(duration, (Timer timer) {
       updateSnake();
     });
@@ -145,9 +146,13 @@ class _MyHomePageState extends State<SnakeGame> with TickerProviderStateMixin {
           print('The end');
           setState(() {
             _flag = !_flag;
+            score =
+                (score * double.parse(elapsedTime.replaceFirst(':', '.')) * 100)
+                        .floor() *
+                    1.0;
+            score = score / 100;
+            // print(score);
           });
-          // dispose();
-          resetWatch();
           Navigator.pushReplacementNamed(context, '/end');
           // showDialog(
           //     context: context,

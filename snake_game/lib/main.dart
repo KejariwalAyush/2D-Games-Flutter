@@ -45,8 +45,13 @@ class _MainScreenState extends State<MainScreen> {
 
   getPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    highScore =
-        prefs.getInt('highscore') == null ? 0 : prefs.getInt('highscore');
+    highScore = border
+        ? prefs.getDouble('highscore1') == null
+            ? 0
+            : prefs.getDouble('highscore1')
+        : prefs.getDouble('highscore2') == null
+            ? 0
+            : prefs.getDouble('highscore2');
     border = prefs.getBool('border') == null ? false : prefs.getBool('border');
     // int snakeColorCode = prefs.getInt('snakeColor') == null
     //     ? prefs.getInt('snakeColor')
@@ -159,7 +164,9 @@ class _EndPageState extends State<EndPage> {
 
   setPref() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('highscore', score);
+    border
+        ? prefs.setDouble('highscore1', score)
+        : prefs.setDouble('highscore2', score);
     prefs.setBool('border', border);
     // prefs.setInt('snakeColor', snakeColor.hashCode);
     // prefs.setInt('foodColor', foodColor.hashCode);
@@ -243,10 +250,12 @@ class _EndPageState extends State<EndPage> {
                     : SizedBox(),
                 RichText(
                   text: TextSpan(
-                      text: 'High Score: ',
+                      text: border
+                          ? 'High Score\nwith borders:  '
+                          : 'High Score\nwithout borders:  ',
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 35,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic),
                       children: [
@@ -299,8 +308,10 @@ class _EndPageState extends State<EndPage> {
                         ),
                         color: Colors.blueGrey[700],
                         padding: EdgeInsets.all(30),
-                        onPressed: () =>
-                            Navigator.of(context).pushNamed('/game'),
+                        onPressed: () {
+                          elapsedTime = '';
+                          Navigator.of(context).pushNamed('/game');
+                        },
                       ),
                     ),
                   ),
