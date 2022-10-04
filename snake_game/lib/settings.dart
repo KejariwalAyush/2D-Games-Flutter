@@ -3,6 +3,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:snake_game/SnakePage.dart';
 
 class Settings extends StatefulWidget {
+  const Settings({Key? key}) : super(key: key);
+
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -14,24 +16,25 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Settings',
           style: TextStyle(),
         ),
         centerTitle: true,
         backgroundColor: Colors.indigoAccent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             ListTile(
-              title: Text('Borders'),
-              subtitle: Text('On Enabling Borders, Snake will not bite itself'),
+              title: const Text('Borders'),
+              subtitle:
+                  const Text('On Enabling Borders, Snake will not bite itself'),
               trailing: Switch.adaptive(
                 value: border,
                 onChanged: (value) {
@@ -93,11 +96,11 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget colorChangeTile({
-    String title,
-    String alertTitle,
-    Color selectedColor,
-    String alertButtonText,
-    @required VoidCallback onPressed,
+    required String title,
+    required String alertTitle,
+    required Color selectedColor,
+    required String alertButtonText,
+    required VoidCallback onPressed,
   }) {
     return ListTile(
       title: Text(title),
@@ -111,7 +114,7 @@ class _SettingsState extends State<Settings> {
       ),
       onTap: () => showDialog(
         context: context,
-        child: AlertDialog(
+        builder: (context) => AlertDialog(
           title: Text(alertTitle),
           content: SingleChildScrollView(
             child: MaterialPicker(
@@ -121,7 +124,7 @@ class _SettingsState extends State<Settings> {
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            ElevatedButton(
               child: Text(alertButtonText),
               onPressed: onPressed,
               // () {
